@@ -1,7 +1,846 @@
----
-layout: page
-title: test
-permalink: /test/
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EfDI Interactive Web Map</title>
+  <!-- CSS for styling -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<iframe src="https://adrianaarellano.github.io/efdi_maps_test_2/" height="900" width="1100" style="border:none;"></iframe>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 0;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      transition: background-color 0.3s;
+      position: relative;
+    }
+
+    .tab:hover {
+      background-color: #34495e;
+    }
+
+    .active-tab {
+      background-color: #1abc9c;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: white;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .tab:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      color: #2c3e50;
+      cursor: pointer;
+    }
+
+    .indent-1 {
+      padding-left: 20px;
+    }
+
+    .indent-2 {
+      padding-left: 40px;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f1f1f1;
+    }
+
+    #breadcrumbs {
+      padding: 10px;
+      background-color: #ecf0f1;
+      font-size: 0.9em;
+      margin: 0 0 10px;
+      display: flex;
+      gap: 5px;
+    }
+
+    #breadcrumbs span {
+      color: #2c3e50;
+    }
+
+    #breadcrumbs a {
+      text-decoration: none;
+      color: #3498db;
+    }
+
+    #breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+
+    .year-slider {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    #yearRange {
+      width: 300px;
+    }
+
+    #selectedYear {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    #mapFrame {
+      display: block;
+      width: 100%;
+      height: 600px;
+      border: none;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+
+    .fade-in {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tabs">
+  <div class="tab">
+    EfDI
+    <div class="dropdown-menu">
+      <div class="dropdown-item" onclick="switchTopLevel('efdi_all', 'Overall')">Overall</div>
+      <div class="dropdown-item indent-1" onclick="switchTopLevel('efdi_non_system', 'Non-system')">Non-system</div>
+      <div class="dropdown-item indent-1" onclick="switchTopLevel('efdi_policy', 'Policy')">Policy</div>
+      <div class="dropdown-item indent-1" onclick="switchTopLevel('efdi_practice', 'Practice')">Practice</div>
+      <div class="dropdown-item indent-2" onclick="switchTopLevel('efdi_levels', 'Levels')">Levels</div>
+      <div class="dropdown-item indent-2" onclick="switchTopLevel('efdi_equality', 'Equality')">Equality</div>
+    </div>
+  </div>
+
+  <div class="tab">
+    Curriculum
+    <div class="dropdown-menu" id="curriculumDropdown"></div>
+  </div>
+
+  <div class="tab">
+    Pedagogy
+    <div class="dropdown-menu" id="pedagogyDropdown"></div>
+  </div>
+
+    <div class="tab">
+    Training
+    <div class="dropdown-menu" id="trainingDropdown"></div>
+  </div>
+
+  <div class="tab">
+    Ethos
+    <div class="dropdown-menu" id="ethosDropdown"></div>
+  </div>
+
+  <div class="tab">
+    Unitary System
+    <div class="dropdown-menu" id="autonomyDropdown"></div>
+  </div>
+
+  <div class="tab">
+    Compulsory Education
+    <div class="dropdown-menu" id="ceDropdown"></div>
+  </div>
+
+  <div class="tab">
+    Common Education
+    <div class="dropdown-menu" id="trackingDropdown"></div>
+  </div>
+</div>
+
+  <div class="year-slider">
+    <label for="yearRange">Select Year:</label><br>
+    <input type="range" id="yearRange" min="0" max="2" step="1" value="2" oninput="updateYear(this.value)">
+    <div id="selectedYear">2022</div>
+  </div>
+
+  <div id="breadcrumbs">
+    <span id="breadcrumb-path"><a href="#" onclick="resetBreadcrumb()">EfDI</a> > Overall</span>
+  </div>
+
+  <iframe id="mapFrame" src="https://adrianaarellano.github.io/comp_all_index_2022/"></iframe>
+
+  <script>
+    let currentYear = "2022";
+    let breadcrumbPath = "EfDI > Overall"; // Default breadcrumb
+    let currentTab = "efdi_all"; // Default tab
+    let topLevelSelection = "efdi_all"; // Track top-level selection
+    const baseURL = "https://adrianaarellano.github.io/";
+    const years = ["2009", "2016", "2022"];
+
+    const curriculumOptions = {
+      efdi_all: [
+        { id: "cur_all", label: "Area", breadcrumb: "Overall > Curriculum" },
+        { id: "cur_policy_all", label: "Policy", breadcrumb: "Overall > Curriculum > Policy" },
+        { id: "cur_policy_all_aim", label: "Aim", breadcrumb: "Overall > Curriculum > Policy > Aim" },
+        { id: "cur_policy_all_topic", label: "Topic", breadcrumb: "Overall > Curriculum > Policy > Topic" },
+        { id: "cur_policy_all_program", label: " Unified Curricula", breadcrumb: "Overall > Curriculum > Policy > Unified Curricula" },
+        { id: "cur_policy_all_mandate", label: "CE Mandate", breadcrumb: "Overall > Curriculum > Policy > CE Mandate" },
+        { id: "cur_practice_all", label: "Practice", breadcrumb: "Overall > Curriculum > Practice" },
+        { id: "cur_practice_all_out_act", label: "Outside Activities", breadcrumb: "Overall > Curriculum > Practice > Outside Activities" }
+      ],
+      efdi_non_system: [
+        { id: "cur_non", label: "Area", breadcrumb: "Non-system > Curriculum" },
+        { id: "cur_policy_non", label: "Policy", breadcrumb: "Non-system > Curriculum > Policy" },
+        { id: "cur_policy_non_aim", label: "Aim", breadcrumb: "Non-system > Curriculum > Policy > Aim" },
+        { id: "cur_policy_non_topic", label: "Topic", breadcrumb: "Non-system > Curriculum > Policy > Topic" },
+        { id: "cur_policy_non_program", label: "Unified Curricula", breadcrumb: "Non-system > Curriculum > Policy > Unified Curricula" },
+        { id: "cur_policy_non_mandate", label: "CE Mandate", breadcrumb: "Non-system > Curriculum > Policy > CE Mandate" },
+        { id: "cur_practice_non", label: "Practice", breadcrumb: "Non-system > Curriculum > Practice" },
+        { id: "cur_practice_non_out_act", label: "Outside Activities", breadcrumb: "Non-system > Curriculum > Practice > Outside Activities" }
+      ],
+      efdi_policy: [
+        { id: "cur_policy_policy", label: "Area", breadcrumb: "Policy > Curriculum" },
+        { id: "cur_policy_aim", label: "Aim", breadcrumb: "Policy > Curriculum > Aim" },
+        { id: "cur_policy_topic", label: "Topic", breadcrumb: "Policy > Curriculum > Topic" },
+        { id: "cur_policy_program", label: "Unified Curricula", breadcrumb: "Policy > Curriculum > Unified Curricula" },
+        { id: "cur_policy_mandate", label: "CE Mandate", breadcrumb: "Policy > Curriculum > CE Mandate" }
+      ],
+      efdi_practice: [
+        { id: "cur_practice_practice", label: "Area", breadcrumb: "Practice > Curriculum" },
+        { id: "cur_practice_out_act", label: "Outside Activities", breadcrumb: "Practice > Curriculum > Outside Activities" }
+      ],
+      efdi_levels: [
+        { id: "cur_levels", label: "Area", breadcrumb: "Levels > Curriculum" },
+        { id: "cur_policy_levels", label: "Policy", breadcrumb: "Levels > Curriculum > Policy" },
+        { id: "cur_policy_levels_aim", label: "Aim", breadcrumb: "Levels > Curriculum > Policy > Aim" },
+        { id: "cur_policy_levels_topic", label: "Topic", breadcrumb: "Levels > Curriculum > Policy > Topic" },
+        { id: "cur_policy_levels_mandate", label: "CE Mandate", breadcrumb: "Levels > Curriculum > Policy > CE Mandate" },
+        { id: "cur_practice_levels", label: "Practice", breadcrumb: "Levels > Curriculum > Practice" },
+        { id: "cur_practice_levels_out_act", label: "Outside Activities", breadcrumb: "Levels > Curriculum > Practice > Outside Activities" }
+      ],
+      efdi_equality: [
+        { id: "cur_equality", label: "Area", breadcrumb: "Equality > Curriculum" },
+        { id: "cur_policy_equality", label: "Policy", breadcrumb: "Equality > Curriculum > Policy" },
+        { id: "cur_policy_equality_aim", label: "Aim", breadcrumb: "Equality > Curriculum > Policy > Aim" },
+        { id: "cur_policy_equality_topic", label: "Topic", breadcrumb: "Equality > Curriculum > Policy > Topic" },
+        { id: "cur_policy_equality_program", label: "Unified Curricula", breadcrumb: "Equality > Curriculum > Policy > Unified Curricula" }
+      ]
+    };
+
+    function updateCurriculumDropdown() {
+      const dropdown = document.getElementById("curriculumDropdown");
+      dropdown.innerHTML = ""; // Clear existing items
+
+      curriculumOptions[topLevelSelection].forEach(option => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+
+        // Assign indentation classes
+        if (option.label === "Policy" || option.label === "Practice") {
+          item.classList.add("indent-1");
+        } else if (!["Area", "Policy", "Practice"].includes(option.label)) {
+          item.classList.add("indent-2");
+        }
+
+        item.textContent = option.label;
+        item.onclick = () => switchTab(option.id, option.breadcrumb);
+        dropdown.appendChild(item);
+      });
+    }
+
+    const pedagogyOptions = {
+      efdi_all: [
+        { id: "pedagogy_all", label: "Area", breadcrumb: "Overall > Pedagogy" },
+        { id: "pedagogy_policy_all", label: "Policy", breadcrumb: "Overall > Pedagogy > Policy" },
+        { id: "pedagogy_policy_all_guide", label: "Guidelines", breadcrumb: "Overall > Pedagogy > Policy > Guidelines" },
+        { id: "pedagogy_policy_all_object", label: "Objectives", breadcrumb: "Overall > Pedagogy > Policy > Objectives" },
+        { id: "pedagogy_practice_all", label: "Practice", breadcrumb: "Overall > Pedagogy > Practice" },
+        { id: "pedagogy_practice_all_vote", label: "Student Vote", breadcrumb: "Overall > Pedagogy > Practice > Student Vote" },
+        { id: "pedagogy_practice_all_act_prac", label: "Active Participation", breadcrumb: "Overall > Pedagogy > Practice > Active Participation" },
+        { id: "pedagogy_practice_all_dis", label: "Open Discussion", breadcrumb: "Overall > Pedagogy > Practice > Open Discussion" },
+        { id: "pedagogy_practice_all_op", label: "Student Participation", breadcrumb: "Overall > Pedagogy > Practice > Student Participation in school affairs" },
+        { id: "pedagogy_practice_all_class", label: "Classroom Climate", breadcrumb: "Overall > Pedagogy > Practice > Classroom Climate" }
+      ],
+      efdi_non_system: [
+        { id: "pedagogy_non", label: "Area", breadcrumb: "Non-system > Pedagogy" },
+        { id: "pedagogy_policy_non", label: "Policy", breadcrumb: "Non-system > Pedagogy > Policy" },
+        { id: "pedagogy_policy_non_guide", label: "Guidelines", breadcrumb: "Non-system > Pedagogy > Policy > Guidelines" },
+        { id: "pedagogy_policy_non_object", label: "Objectives", breadcrumb: "Non-system > Pedagogy > Policy > Objectives" },
+        { id: "pedagogy_practice_non", label: "Practice", breadcrumb: "Overall > Pedagogy > Practice" },
+        { id: "pedagogy_practice_non_vote", label: "Student Vote", breadcrumb: "Non-system > Pedagogy > Practice > Student Vote" },
+        { id: "pedagogy_practice_non_act_prac", label: "Active Participation", breadcrumb: "Non-system > Pedagogy > Practice > Active Participation" },
+        { id: "pedagogy_practice_non_dis", label: "Open Discussion", breadcrumb: "Non-system > Pedagogy > Practice > Open Discussion" },
+        { id: "pedagogy_practice_non_op", label: "Student Participation", breadcrumb: "Non-system > Pedagogy > Practice > Student Participation in school affairs" },
+        { id: "pedagogy_practice_non_class", label: "Classroom Climate", breadcrumb: "Non-system > Pedagogy > Practice > Classroom Climate" }
+      ],
+      efdi_policy: [
+        { id: "pedagogy_policy_policy", label: "Area", breadcrumb: "Policy > Pedagogy" },
+        { id: "pedagogy_policy_guide", label: "Guidelines", breadcrumb: "Policy > Pedagogy > Guidelines" },
+        { id: "pedagogy_policy_object", label: "Objectives", breadcrumb: "Policy > Pedagogy > Objectives" }
+      ],
+      efdi_practice: [
+        { id: "pedagogy_practice_practice", label: "Area", breadcrumb: "Practice > Pedagogy" },
+        { id: "pedagogy_practice_vote", label: "Student Vote", breadcrumb: "Practice > Pedagogy > Student Vote" },
+        { id: "pedagogy_practice_act_prac", label: "Active Participation", breadcrumb: "Practice > Pedagogy > Active Participation" },
+        { id: "pedagogy_practice_dis", label: "Open Discussion", breadcrumb: "Practice > Pedagogy > Open Discussion" },
+        { id: "pedagogy_practice_op", label: "Student Participation", breadcrumb: "Practice > Pedagogy > Student Participation in school affairs" },
+        { id: "pedagogy_practice_class", label: "Classroom Climate", breadcrumb: "Practice > Pedagogy > Classroom Climate" }
+      ],
+      efdi_levels: [
+        { id: "pedagogy_levels", label: "Area", breadcrumb: "Levels > Pedagogy" },
+        { id: "pedagogy_policy_levels", label: "Policy", breadcrumb: "Levels > Pedagogy > Policy" },
+        { id: "pedagogy_policy_levels_guide", label: "Guidelines", breadcrumb: "Levels > Pedagogy > Policy > Guidelines" },
+        { id: "pedagogy_policy_levels_object", label: "Objectives", breadcrumb: "Levels > Pedagogy > Policy > Objectives" },
+        { id: "pedagogy_practice_levels", label: "Practice", breadcrumb: "Levels > Pedagogy > Practice" },
+        { id: "pedagogy_practice_levels_vote", label: "Student Vote", breadcrumb: "Levels > Pedagogy > Practice > Student Vote" },
+        { id: "pedagogy_practice_levels_act_prac", label: "Active Participation", breadcrumb: "Levels > Pedagogy > Practice > Active Participation" },
+        { id: "pedagogy_practice_levels_dis", label: "Open Discussion", breadcrumb: "Levels > Pedagogy > Practice > Open Discussion" },
+        { id: "pedagogy_practice_levels_op", label: "Student Participation", breadcrumb: "Levels > Pedagogy > Practice > Student Participation in school affairs" },
+        { id: "pedagogy_practice_levels_class", label: "Classroom Climate", breadcrumb: "Levels > Pedagogy > Practice > Classroom Climate" }
+      ],
+      efdi_equality: [
+        { id: "pedagogy_equality", label: "Area", breadcrumb: "Equality > Pedagogy" },
+        { id: "pedagogy_policy_equality", label: "Policy", breadcrumb: "Equality > Pedagogy > Policy" },
+        { id: "pedagogy_policy_equality_guide", label: "Guidelines", breadcrumb: "Equality > Pedagogy > Policy > Guidelines" },
+        { id: "pedagogy_practice_equality", label: "Practice", breadcrumb: "Equality > Pedagogy > Practice" },
+        { id: "pedagogy_practice_equality_vote", label: "Student Vote", breadcrumb: "Equality > Pedagogy > Practice > Student Vote" },
+        { id: "pedagogy_practice_equality_class", label: "Classroom Climate", breadcrumb: "Equality > Pedagogy > Practice > Classroom Climate" }
+      ]
+    };
+
+    function updatePedagogyDropdown() {
+      const dropdown = document.getElementById("pedagogyDropdown");
+      dropdown.innerHTML = ""; // Clear existing items
+
+      pedagogyOptions[topLevelSelection].forEach(option => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+
+        // Assign indentation classes
+        if (option.label === "Policy" || option.label === "Practice") {
+          item.classList.add("indent-1");
+        } else if (!["Area", "Policy", "Practice"].includes(option.label)) {
+          item.classList.add("indent-2");
+        }
+
+        item.textContent = option.label;
+        item.onclick = () => switchTab(option.id, option.breadcrumb);
+        dropdown.appendChild(item);
+      });
+    }
+
+    const trainingOptions = {
+      efdi_all: [
+        { id: "train_all", label: "Area", breadcrumb: "Overall > Training" },
+        { id: "train_policy_all", label: "Policy", breadcrumb: "Overall > Training > Policy" },
+        { id: "train_policy_all_in_service", label: "In-service", breadcrumb: "Overall > Training > Policy > In-service" },
+        { id: "train_policy_all_mandatory", label: "Mandatory", breadcrumb: "Overall > Training > Policy > Mandatory" }
+      ],
+      efdi_non_system: [
+        { id: "train_non", label: "Area", breadcrumb: "Non-system > Training" },
+        { id: "train_policy_non", label: "Policy", breadcrumb: "Non-system > Training > Policy" },
+        { id: "train_policy_non_in_service", label: "In-service", breadcrumb: "Non-system > Training > Policy > In-service" },
+        { id: "train_policy_non_mandatory", label: "Mandatory", breadcrumb: "Non-system > Training > Policy > Mandatory" }
+      ],
+      efdi_policy: [
+        { id: "train_policy_policy", label: "Area", breadcrumb: "Policy > Training" },
+        { id: "train_policy_in_service", label: "In-service", breadcrumb: "Policy > Training > In-service" },
+        { id: "train_policy_mandatory", label: "Mandatory", breadcrumb: "Policy > Training > Mandatory" }
+      ],
+      efdi_practice: [
+      ],
+      efdi_levels: [
+        { id: "train_levels", label: "Area", breadcrumb: "Levels > Training" },
+        { id: "train_policy_levels", label: "Policy", breadcrumb: "Levels > Training > Policy" },
+        { id: "train_policy_levels_in_service", label: "In-service", breadcrumb: "Levels > Training > Policy > In-service" },
+        { id: "train_policy_levels_mandatory", label: "Mandatory", breadcrumb: "Levels > Training > Policy > Mandatory" }
+      ],
+      efdi_equality: [
+      ]
+    };
+
+    function updateTrainingDropdown() {
+      const dropdown = document.getElementById("trainingDropdown");
+      dropdown.innerHTML = ""; // Clear existing items
+
+      trainingOptions[topLevelSelection].forEach(option => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+
+        // Assign indentation classes
+        if (option.label === "Policy" || option.label === "Practice") {
+          item.classList.add("indent-1");
+        } else if (!["Area", "Policy", "Practice"].includes(option.label)) {
+          item.classList.add("indent-2");
+        }
+
+        item.textContent = option.label;
+        item.onclick = () => switchTab(option.id, option.breadcrumb);
+        dropdown.appendChild(item);
+      });
+    }
+
+    const ethosOptions = {
+      efdi_all: [
+        { id: "ethos_all", label: "Area", breadcrumb: "Overall > Ethos" },
+        { id: "ethos_policy_all", label: "Policy", breadcrumb: "Overall > Ethos > Policy" },
+        { id: "ethos_policy_all_guide", label: "Guidelines", breadcrumb: "Overall > Ethos > Policy > Guidelines" },
+        { id: "ethos_practice_all", label: "Practice", breadcrumb: "Overall > Ethos > Practice" },
+        { id: "ethos_practice_all_student", label: "Student Involvement", breadcrumb: "Overall > Ethos > Practice > Student Involvement" },
+        { id: "ethos_practice_all_teacher", label: "Teacher Involvement", breadcrumb: "Overall > Ethos > Practice > Teacher Involvement" }
+      ],
+      efdi_non_system: [
+        { id: "ethos_non", label: "Area", breadcrumb: "Non-system > Ethos" },
+        { id: "ethos_policy_non", label: "Policy", breadcrumb: "Non-system > Ethos > Policy" },
+        { id: "ethos_policy_non_guide", label: "Guidelines", breadcrumb: "Non-system > Ethos > Policy > Guidelines" },
+        { id: "ethos_practice_non", label: "Practice", breadcrumb: "Non-system > Ethos > Practice" },
+        { id: "ethos_practice_non_student", label: "Student Involvement", breadcrumb: "Non-system > Ethos > Practice > Student Involvement" },
+        { id: "ethos_practice_non_teacher", label: "Teacher Involvement", breadcrumb: "Non-system > Ethos > Practice > Teacher Involvement" }
+      ],
+      efdi_policy: [
+        { id: "ethos_policy_policy", label: "Area", breadcrumb: "Policy > Ethos" },
+        { id: "ethos_policy_guide", label: "Guidelines", breadcrumb: "Policy > Ethos > Guidelines" }
+      ],
+      efdi_practice: [
+        { id: "ethos_practice_practice", label: "Area", breadcrumb: "Practice > Ethos" },
+        { id: "ethos_practice_student", label: "Student Involvement", breadcrumb: "Practice > Ethos > Student Involvement" },
+        { id: "ethos_practice_teacher", label: "Teacher Involvement", breadcrumb: "Practice > Ethos > Teacher Involvement" }
+      ],
+      efdi_levels: [
+        { id: "ethos_levels", label: "Area", breadcrumb: "Levels > Ethos" },
+        { id: "ethos_policy_levels", label: "Policy", breadcrumb: "Levels > Ethos > Policy" },
+        { id: "ethos_policy_levels_guide", label: "Guidelines", breadcrumb: "Levels > Ethos > Policy > Guidelines" },
+        { id: "ethos_practice_levels", label: "Practice", breadcrumb: "Levels > Ethos > Practice" },
+        { id: "ethos_practice_levels_student", label: "Student Involvement", breadcrumb: "Levels > Ethos > Practice > Student Involvement" },
+        { id: "ethos_practice_levels_teacher", label: "Teacher Involvement", breadcrumb: "Levels > Ethos > Practice > Teacher Involvement" }
+      ],
+      efdi_equality: [
+      ]
+    };
+
+    function updateEthosDropdown() {
+      const dropdown = document.getElementById("ethosDropdown");
+      dropdown.innerHTML = ""; // Clear existing items
+
+      ethosOptions[topLevelSelection].forEach(option => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+
+        // Assign indentation classes
+        if (option.label === "Policy" || option.label === "Practice") {
+          item.classList.add("indent-1");
+        } else if (!["Area", "Policy", "Practice"].includes(option.label)) {
+          item.classList.add("indent-2");
+        }
+
+        item.textContent = option.label;
+        item.onclick = () => switchTab(option.id, option.breadcrumb);
+        dropdown.appendChild(item);
+      });
+    }
+
+    const autonomyOptions = {
+      efdi_all: [
+        { id: "autonomy_all", label: "Area", breadcrumb: "Overall > Unitary system" },
+        { id: "autonomy_policy_all", label: "Policy", breadcrumb: "Overall > Unitary system > Policy" },
+        { id: "autonomy_policy_all_assess", label: "Guidelines", breadcrumb: "Overall > Unitary system > Policy > Assessment" },
+        { id: "autonomy_policy_all_cur", label: "Centralized Curriculum", breadcrumb: "Overall > Unitary system > Policy > Centralized Curriculum" },
+        { id: "autonomy_practice_all", label: "Practice", breadcrumb: "Overall > Unitary system > Practice" },
+        { id: "autonomy_practice_all_ce_act", label: "Centralization of CE Activities", breadcrumb: "Overall > Unitary system > Practice > Centralization of Activities" },
+        { id: "autonomy_practice_all_teach_cur", label: "Teacher Use of Official Curricula", breadcrumb: "Overall > Unitary system > Practice > Use of Official Curricula" }
+      ],
+      efdi_non_system: [
+      ],
+      efdi_policy: [
+        { id: "autonomy_policy_policy", label: "Area", breadcrumb: "Policy > Unitary system" },
+        { id: "autonomy_policy_assess", label: "Guidelines", breadcrumb: "Policy > Unitary system > Assessment" },
+        { id: "autonomy_policy_cur", label: "Centralized Curriculum", breadcrumb: "Policy > Unitary system > Centralized Curriculum" }
+      ],
+      efdi_practice: [
+        { id: "autonomy_practice_practice", label: "Area", breadcrumb: "Practice > Unitary system" },
+        { id: "autonomy_practice_ce_act", label: "Centralization of CE Activities", breadcrumb: "Practice > Unitary system > Centralization of CE Activities" },
+        { id: "autonomy_practice_teach_cur", label: "Teacher Use of Official Curricula", breadcrumb: "Practice > Unitary system > Use of Official Curricula" }
+      ],
+      efdi_levels: [
+      ],
+      efdi_equality: [
+        { id: "autonomy_equality", label: "Area", breadcrumb: "Equality > Unitary system" },
+        { id: "autonomy_policy_equality", label: "Policy", breadcrumb: "Equality > Unitary system > Policy" },
+        { id: "autonomy_policy_equality_assess", label: "Guidelines", breadcrumb: "Equality > Unitary system > Policy > Assessment" },
+        { id: "autonomy_policy_equality_cur", label: "Centralized Curriculum", breadcrumb: "Overall > Unitary system > Policy > Centralized Curriculum" },
+        { id: "autonomy_practice_equality", label: "Practice", breadcrumb: "Equality > Unitary system > Practice" },
+        { id: "autonomy_practice_equality_ce_act", label: "Student Involvement", breadcrumb: "Equality > Unitary system > Practice > Centralization of CE Activities" },
+        { id: "autonomy_practice_equality_teach_cur", label: "Teacher Use of Official Curricula", breadcrumb: "Equality > Unitary system > Practice > Use of Official Curricula" }
+      ]
+    };
+
+    function updateAutonomyDropdown() {
+      const dropdown = document.getElementById("autonomyDropdown");
+      dropdown.innerHTML = ""; // Clear existing items
+
+      autonomyOptions[topLevelSelection].forEach(option => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+
+        // Assign indentation classes
+        if (option.label === "Policy" || option.label === "Practice") {
+          item.classList.add("indent-1");
+        } else if (!["Area", "Policy", "Practice"].includes(option.label)) {
+          item.classList.add("indent-2");
+        }
+
+        item.textContent = option.label;
+        item.onclick = () => switchTab(option.id, option.breadcrumb);
+        dropdown.appendChild(item);
+      });
+    }
+
+    const ceOptions = {
+      efdi_all: [
+        { id: "ce_all", label: "Area", breadcrumb: "Overall > Compulsory education" },
+        { id: "ce_policy_all", label: "Policy", breadcrumb: "Overall > Compulsory education > Policy" },
+        { id: "ce_policy_all_years", label: "Years", breadcrumb: "Overall > Compulsory education > Policy > Length of compulsory education" }
+      ],
+      efdi_non_system: [
+      ],
+      efdi_policy: [
+        { id: "ce_policy_policy", label: "Area", breadcrumb: "Policy > Compulsory education" },
+        { id: "ce_policy_years", label: "Years", breadcrumb: "Policy > Compulsory education > Length of compulsory education" }
+      ],
+      efdi_practice: [
+      ],
+      efdi_levels: [
+        { id: "ce_levels", label: "Area", breadcrumb: "Levels > Compulsory education" },
+        { id: "ce_policy_levels", label: "Policy", breadcrumb: "Levels > Compulsory education > Policy" },
+        { id: "ce_policy_levels_years", label: "Years", breadcrumb: "Levels > Compulsory education > Policy > Length of compulsory education" }
+      ],
+      efdi_equality: [
+        { id: "ce_equality", label: "Area", breadcrumb: "Equality > Compulsory education" },
+        { id: "ce_policy_equality", label: "Policy", breadcrumb: "Equality > Compulsory education > Policy" },
+        { id: "ce_policy_equality_years", label: "Years", breadcrumb: "Equality > Compulsory education > Policy > Length of compulsory education" }
+      ]
+    };
+
+    function updateCeDropdown() {
+      const dropdown = document.getElementById("ceDropdown");
+      dropdown.innerHTML = ""; // Clear existing items
+
+      ceOptions[topLevelSelection].forEach(option => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+
+        // Assign indentation classes
+        if (option.label === "Policy" || option.label === "Practice") {
+          item.classList.add("indent-1");
+        } else if (!["Area", "Policy", "Practice"].includes(option.label)) {
+          item.classList.add("indent-2");
+        }
+
+        item.textContent = option.label;
+        item.onclick = () => switchTab(option.id, option.breadcrumb);
+        dropdown.appendChild(item);
+      });
+    }
+
+
+    const trackingOptions = {
+      efdi_all: [
+        { id: "tracking_all", label: "Area", breadcrumb: "Overall > Common education" },
+        { id: "tracking_policy_all", label: "Policy", breadcrumb: "Overall > Common education > Policy" },
+        { id: "tracking_policy_all_age", label: "Age of selection", breadcrumb: "Overall > Common education > Policy > Age of selection" },
+        { id: "tracking_practice_all", label: "Practice", breadcrumb: "Overall > Common education > Practice" },
+        { id: "tracking_practice_all_group", label: "Average grouping", breadcrumb: "Overall > Common education > Practice > Average grouping" }
+      ],
+      efdi_non_system: [
+      ],
+      efdi_policy: [
+        { id: "tracking_policy_policy", label: "Policy", breadcrumb: "Policy > Common education" },
+        { id: "tracking_policy_age", label: "Age of selection", breadcrumb: "Policy > Common education > Age of selection" }
+      ],
+      efdi_practice: [
+        { id: "tracking_practice_practice", label: "Practice", breadcrumb: "Practice > Common education" },
+        { id: "tracking_practice_group", label: "Average grouping", breadcrumb: "Practice > Common education > Average grouping" }
+      ],
+      efdi_levels: [
+      ],
+      efdi_equality: [
+        { id: "tracking_equality", label: "Area", breadcrumb: "Equality > Common education" },
+        { id: "tracking_policy_equality", label: "Policy", breadcrumb: "Policy > Common education" },
+        { id: "tracking_policy_equality_age", label: "Age of selection", breadcrumb: "Policy > Common education > Age of selection" },
+        { id: "tracking_practice_equality_practice", label: "Practice", breadcrumb: "Equality > Practice > Common education" },
+        { id: "tracking_practice_equality_group", label: "Average grouping", breadcrumb: "Equality > Practice > Common education > Average grouping" }
+      ]
+    };
+
+    function updateTrackingDropdown() {
+      const dropdown = document.getElementById("trackingDropdown");
+      dropdown.innerHTML = ""; // Clear existing items
+
+      trackingOptions[topLevelSelection].forEach(option => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+
+        // Assign indentation classes
+        if (option.label === "Policy" || option.label === "Practice") {
+          item.classList.add("indent-1");
+        } else if (!["Area", "Policy", "Practice"].includes(option.label)) {
+          item.classList.add("indent-2");
+        }
+
+        item.textContent = option.label;
+        item.onclick = () => switchTab(option.id, option.breadcrumb);
+        dropdown.appendChild(item);
+      });
+    }
+
+
+    function updateYear(index) {
+      currentYear = years[index];
+      document.getElementById("selectedYear").textContent = currentYear;
+      switchTab(currentTab);
+    }
+
+    function switchTopLevel(selection, newBreadcrumbPath) {
+      topLevelSelection = selection;
+      switchTab(selection, newBreadcrumbPath);
+      updateCurriculumDropdown();
+      updatePedagogyDropdown(); // Add this line
+      updateEthosDropdown();
+      updateTrainingDropdown();
+      updateAutonomyDropdown();
+      updateCeDropdown();
+      updateTrackingDropdown();
+    }
+
+    function switchTab(mapID, newBreadcrumbPath = '') {
+      const mapFrame = document.getElementById("mapFrame");
+      const breadcrumb = document.getElementById("breadcrumb-path");
+      currentTab = mapID;
+
+      breadcrumbPath = newBreadcrumbPath || breadcrumbPath;
+
+      mapFrame.classList.add("fade-out");
+
+      setTimeout(function () {
+        const mapURLs = {
+          efdi_all: `${baseURL}comp_all_index_${currentYear}/`,
+          efdi_non_system: `${baseURL}comp_non_index_${currentYear}/`,
+          efdi_policy: `${baseURL}comp_policy_index_${currentYear}/`,
+          efdi_practice: `${baseURL}comp_prac_index_${currentYear}/`,
+          efdi_levels: `${baseURL}comp_level_index_${currentYear}/`,
+          efdi_equality: `${baseURL}comp_equality_index_${currentYear}/`,
+          cur_all: `${baseURL}comp_subin_cur_${currentYear}/`,
+          cur_non: `${baseURL}comp_subin_cur_${currentYear}/`,
+          cur_levels: `${baseURL}comp_subin_level_cur_${currentYear}/`,
+          cur_equality: `${baseURL}comp_subin_eq_cur_${currentYear}/`,
+          cur_policy_all: `${baseURL}comp_cur_pol_${currentYear}/`,
+          cur_policy_non: `${baseURL}comp_cur_pol_${currentYear}/`,
+          cur_policy_policy: `${baseURL}comp_cur_pol_${currentYear}/`,
+          cur_policy_levels: `${baseURL}comp_level_cur_pol_${currentYear}/`,
+          cur_policy_equality: `${baseURL}comp_eq_cur_pol_${currentYear}/`,
+          cur_policy_all_aim: `${baseURL}comp_cur_pol_aim_${currentYear}/`,
+          cur_policy_non_aim: `${baseURL}comp_cur_pol_aim_${currentYear}/`,
+          cur_policy_aim: `${baseURL}comp_cur_pol_aim_${currentYear}/`,
+          cur_policy_levels_aim: `${baseURL}comp_cur_pol_aim_${currentYear}/`,
+          cur_policy_equality_aim: `${baseURL}comp_eq_cur_pol_aim_${currentYear}/`,
+          cur_policy_all_topic: `${baseURL}comp_cur_pol_topic_${currentYear}/`,
+          cur_policy_non_topic: `${baseURL}comp_cur_pol_topic_${currentYear}/`,
+          cur_policy_topic: `${baseURL}comp_cur_pol_topic_${currentYear}/`,
+          cur_policy_levels_topic: `${baseURL}comp_cur_pol_topic_${currentYear}/`,
+          cur_policy_equality_topic: `${baseURL}comp_eq_cur_pol_topic_${currentYear}/`,
+          cur_policy_all_program: `${baseURL}comp_cur_pol_program_${currentYear}/`,
+          cur_policy_non_program: `${baseURL}comp_cur_pol_program_${currentYear}/`,
+          cur_policy_program: `${baseURL}comp_cur_pol_program_${currentYear}/`,
+          cur_policy_equality_program: `${baseURL}comp_cur_pol_program_${currentYear}/`,
+          cur_policy_all_mandate: `${baseURL}comp_cur_pol_formal_${currentYear}/`,
+          cur_policy_non_mandate: `${baseURL}comp_cur_pol_formal_${currentYear}/`,
+          cur_policy_mandate: `${baseURL}comp_cur_pol_formal_${currentYear}/`,
+          cur_policy_levels_mandate: `${baseURL}comp_cur_pol_formal_${currentYear}/`,
+          cur_practice_all: `${baseURL}comp_cur_prac_${currentYear}/`,
+          cur_practice_non: `${baseURL}comp_cur_prac_${currentYear}/`,
+          cur_practice_practice: `${baseURL}comp_cur_prac_${currentYear}/`,
+          cur_practice_levels: `${baseURL}comp_level_cur_pol_${currentYear}/`,
+          cur_practice_all_out_act: `${baseURL}comp_cur_prac_act_${currentYear}/`,
+          cur_practice_non_out_act: `${baseURL}comp_cur_prac_act_${currentYear}/`,
+          cur_practice_out_act: `${baseURL}comp_cur_prac_act_${currentYear}/`,
+          cur_practice_levels_out_act: `${baseURL}comp_cur_prac_act_${currentYear}/`,
+          pedagogy_all: `${baseURL}comp_subin_ped_${currentYear}/`,
+          pedagogy_non: `${baseURL}comp_subin_ped_${currentYear}/`,
+          pedagogy_levels: `${baseURL}comp_subin_ped_${currentYear}/`, // Fixed typo
+          pedagogy_equality: `${baseURL}comp_subin_eq_ped_${currentYear}/`,
+          pedagogy_policy_policy: `${baseURL}comp_ped_pol_${currentYear}/`,
+          pedagogy_practice_practice: `${baseURL}comp_ped_prac_${currentYear}/`,
+          pedagogy_policy_all: `${baseURL}comp_ped_pol_${currentYear}/`,
+          pedagogy_non: `${baseURL}comp_ped_pol_${currentYear}/`,
+          pedagogy_policy_policy: `${baseURL}comp_ped_pol_${currentYear}/`,
+          pedagogy_policy_levels: `${baseURL}comp_ped_pol_${currentYear}/`,
+          pedagogy_policy_equality: `${baseURL}comp_eq_ped_pol_${currentYear}/`,
+          pedagogy_policy_all_guide: `${baseURL}comp_ped_pol_guide_${currentYear}/`,
+          pedagogy_policy_non_guide: `${baseURL}comp_ped_pol_guide_${currentYear}/`,
+          pedagogy_policy_guide: `${baseURL}comp_ped_pol_guide_${currentYear}/`,
+          pedagogy_policy_levels_guide: `${baseURL}comp_ped_pol_guide_${currentYear}/`,
+          pedagogy_policy_equality_guide: `${baseURL}comp_eq_ped_pol_guide_${currentYear}/`,
+          pedagogy_policy_all_object: `${baseURL}comp_ped_pol_ob_${currentYear}/`,
+          pedagogy_policy_non_object: `${baseURL}comp_ped_pol_ob_${currentYear}/`,
+          pedagogy_policy_object: `${baseURL}comp_ped_pol_ob_${currentYear}/`,
+          pedagogy_policy_levels_object: `${baseURL}comp_ped_pol_ob_${currentYear}/`,
+          pedagogy_practice_all: `${baseURL}comp_ped_prac_${currentYear}/`,
+          pedagogy_practice_non: `${baseURL}comp_ped_prac_${currentYear}/`,  
+          pedagogy_practice_practice: `${baseURL}comp_ped_prac_${currentYear}/`,
+          pedagogy_practice_levels: `${baseURL}comp_ped_prac_${currentYear}/`,
+          pedagogy_practice_equality: `${baseURL}comp_eq_ped_prac_${currentYear}/`,
+          pedagogy_practice_all_vote: `${baseURL}comp_ped_prac_vote_${currentYear}/`,
+          pedagogy_practice_non_vote: `${baseURL}comp_ped_prac_vote_${currentYear}/`,
+          pedagogy_practice_vote: `${baseURL}comp_ped_prac_vote_${currentYear}/`,
+          pedagogy_practice_levels_vote: `${baseURL}comp_ped_prac_vote_${currentYear}/`,
+          pedagogy_practice_equality_vote: `${baseURL}comp_ped_prac_vote_${currentYear}/`,
+          pedagogy_practice_all_act_prac: `${baseURL}comp_ped_prac_act_${currentYear}/`,
+          pedagogy_practice_non_act_prac: `${baseURL}comp_ped_prac_act_${currentYear}/`,
+          pedagogy_practice_act_prac: `${baseURL}comp_ped_prac_act_${currentYear}/`,
+          pedagogy_practice_levels_act_prac: `${baseURL}comp_ped_prac_act_${currentYear}/`,
+          pedagogy_practice_all_dis: `${baseURL}comp_ped_prac_dis_${currentYear}/`,
+          pedagogy_practice_non_dis: `${baseURL}comp_ped_prac_dis_${currentYear}/`,
+          pedagogy_practice_dis: `${baseURL}comp_ped_prac_dis_${currentYear}/`,
+          pedagogy_practice_levels_dis: `${baseURL}comp_ped_prac_dis_${currentYear}/`,
+          pedagogy_practice_all_op: `${baseURL}comp_ped_prac_op_${currentYear}/`,
+          pedagogy_practice_non_op: `${baseURL}comp_ped_prac_op_${currentYear}/`,
+          pedagogy_practice_op: `${baseURL}comp_ped_prac_op_${currentYear}/`,
+          pedagogy_practice_levels_op: `${baseURL}comp_ped_prac_op_${currentYear}/`,
+          pedagogy_practice_all_class: `${baseURL}comp_ped_prac_class_${currentYear}/`,
+          pedagogy_practice_non_class: `${baseURL}comp_ped_prac_class_${currentYear}/`,
+          pedagogy_practice_class: `${baseURL}comp_ped_prac_class_${currentYear}/`,
+          pedagogy_practice_levels_class: `${baseURL}comp_ped_prac_class_${currentYear}/`,
+          pedagogy_practice_equality_class: `${baseURL}comp_eq_ped_prac_class_${currentYear}/`,
+          train_all: `${baseURL}comp_subin_train_${currentYear}/`,
+          train_non: `${baseURL}comp_subin_train_${currentYear}/`,
+          train_levels: `${baseURL}comp_subin_train_${currentYear}/`,
+          train_policy_all: `${baseURL}comp_train_pol_${currentYear}/`,
+          train_policy_non: `${baseURL}comp_train_pol_${currentYear}/`,
+          train_policy_policy: `${baseURL}comp_train_pol_${currentYear}/`,
+          train_policy_levels: `${baseURL}comp_train_pol_${currentYear}/`,
+          train_policy_all_in_service: `${baseURL}comp_train_pol_service_${currentYear}/`,
+          train_policy_non_in_service: `${baseURL}comp_train_pol_service_${currentYear}/`,
+          train_policy_in_service: `${baseURL}comp_train_pol_service_${currentYear}/`,
+          train_policy_levels_in_service: `${baseURL}comp_train_pol_service_${currentYear}/`,
+          train_policy_all_mandatory: `${baseURL}comp_train_pol_man_${currentYear}/`,
+          train_policy_non_mandatory: `${baseURL}comp_train_pol_man_${currentYear}/`,
+          train_policy_mandatory: `${baseURL}comp_train_pol_man_${currentYear}/`,
+          train_policy_levels_mandatory: `${baseURL}comp_train_pol_man_${currentYear}/`,
+          ethos_all: `${baseURL}comp_subin_ethos_${currentYear}/`,
+          ethos_non: `${baseURL}comp_subin_ethos_${currentYear}/`,
+          ethos_levels: `${baseURL}comp_subin_ethos_${currentYear}/`,
+          ethos_policy_all: `${baseURL}comp_ethos_pol_${currentYear}/`,
+          ethos_policy_non: `${baseURL}comp_ethos_pol_${currentYear}/`,
+          ethos_policy_policy: `${baseURL}comp_ethos_pol_${currentYear}/`,
+          ethos_policy_levels: `${baseURL}comp_ethos_pol_${currentYear}/`,
+          ethos_policy_all_guide: `${baseURL}comp_ethos_pol_guide_${currentYear}/`,
+          ethos_policy_non_guide: `${baseURL}comp_ethos_pol_guide_${currentYear}/`,
+          ethos_policy_guide: `${baseURL}comp_ethos_pol_guide_${currentYear}/`,
+          ethos_policy_levels_guide: `${baseURL}comp_ethos_pol_guide_${currentYear}/`,
+          ethos_practice_all: `${baseURL}comp_ethos_prac_${currentYear}/`,
+          ethos_practice_non: `${baseURL}comp_ethos_prac_${currentYear}/`,
+          ethos_practice_practice: `${baseURL}comp_ethos_prac_${currentYear}/`,
+          ethos_practice_levels: `${baseURL}comp_ethos_prac_${currentYear}/`,
+          ethos_practice_all_student: `${baseURL}comp_ethos_prac_student_${currentYear}/`,
+          ethos_practice_non_student: `${baseURL}comp_ethos_prac_student_${currentYear}/`,
+          ethos_practice_student: `${baseURL}comp_ethos_prac_student_${currentYear}/`,
+          ethos_practice_levels_student: `${baseURL}comp_ethos_prac_student_${currentYear}/`,
+          ethos_practice_all_teacher: `${baseURL}comp_ethos_prac_teach_${currentYear}/`,
+          ethos_practice_non_teacher: `${baseURL}comp_ethos_prac_teach_${currentYear}/`,
+          ethos_practice_teacher: `${baseURL}comp_ethos_prac_teach_${currentYear}/`,
+          ethos_practice_levels_teacher: `${baseURL}comp_ethos_prac_teach_${currentYear}/`,
+          autonomy_all: `${baseURL}comp_subin_auto_${currentYear}/`,
+          autonomy_equality: `${baseURL}comp_subin_auto_${currentYear}/`,
+          autonomy_policy_all: `${baseURL}comp_auto_pol_${currentYear}/`,
+          autonomy_policy_policy: `${baseURL}comp_auto_pol_${currentYear}/`,
+          autonomy_policy_equality: `${baseURL}comp_auto_pol_${currentYear}/`,
+          autonomy_policy_all_assess: `${baseURL}comp_auto_pol_assess_${currentYear}/`,
+          autonomy_policy_assess: `${baseURL}comp_auto_pol_assess_${currentYear}/`,
+          autonomy_policy_equality_assess: `${baseURL}comp_auto_pol_assess_${currentYear}/`,
+          autonomy_policy_all_cur: `${baseURL}comp_auto_pol_cur_${currentYear}/`,
+          autonomy_policy_cur: `${baseURL}comp_auto_pol_cur_${currentYear}/`,
+          autonomy_policy_equality_cur: `${baseURL}comp_auto_pol_cur_${currentYear}/`,
+          autonomy_practice_all: `${baseURL}comp_auto_prac_${currentYear}/`,
+          autonomy_practice_practice: `${baseURL}comp_auto_prac_${currentYear}/`,
+          autonomy_practice_equality: `${baseURL}comp_auto_prac_${currentYear}/`,
+          autonomy_practice_all_ce_act: `${baseURL}comp_auto_prac_ce_act_${currentYear}/`,
+          autonomy_practice_ce_act: `${baseURL}comp_auto_prac_ce_act_${currentYear}/`,
+          autonomy_practice_equality_ce_act: `${baseURL}comp_auto_prac_ce_act_${currentYear}/`,
+          autonomy_practice_all_teach_cur: `${baseURL}comp_auto_prac_cur_${currentYear}/`,
+          autonomy_practice_teach_cur: `${baseURL}comp_auto_prac_cur_${currentYear}/`,
+          autonomy_practice_equality_teach_cur: `${baseURL}comp_auto_prac_cur_${currentYear}/`,
+          ce_all: `${baseURL}comp_subin_ce_${currentYear}/`,
+          ce_levels: `${baseURL}comp_subin_ce_${currentYear}/`,
+          ce_equality: `${baseURL}comp_subin_ce_${currentYear}/`,
+          ce_policy_all: `${baseURL}comp_subin_ce_${currentYear}/`,
+          ce_policy_policy: `${baseURL}comp_subin_ce_${currentYear}/`,
+          ce_policy_levels: `${baseURL}comp_subin_ce_${currentYear}/`,
+          ce_policy_equality: `${baseURL}comp_subin_ce_${currentYear}/`,
+          ce_policy_all_years: `${baseURL}comp_ce_pol_years_${currentYear}/`,
+          ce_policy_years: `${baseURL}comp_ce_pol_years_${currentYear}/`,
+          ce_policy_levels_years: `${baseURL}comp_ce_pol_years_${currentYear}/`,
+          ce_policy_equality_years: `${baseURL}comp_ce_pol_years_${currentYear}/`,
+          tracking_all: `${baseURL}comp_subin_track_${currentYear}/`,
+          tracking_equality: `${baseURL}comp_subin_track_${currentYear}/`,
+          tracking_policy_all: `${baseURL}comp_track_pol_${currentYear}/`,
+          tracking_policy_policy: `${baseURL}comp_track_pol_${currentYear}/`,
+          tracking_policy_equality: `${baseURL}comp_track_pol_${currentYear}/`,
+          tracking_policy_all_age: `${baseURL}comp_track_pol_age_${currentYear}/`,
+          tracking_policy_age: `${baseURL}comp_track_pol_age_${currentYear}/`,
+          tracking_policy_equality_age: `${baseURL}comp_track_pol_age_${currentYear}/`,
+          tracking_practice_all: `${baseURL}comp_track_prac_${currentYear}/`,
+          tracking_practice_practice: `${baseURL}comp_track_prac_${currentYear}/`,
+          tracking_practice_equality: `${baseURL}comp_track_prac_${currentYear}/`,
+          tracking_practice_all_group: `${baseURL}comp_track_prac_group_${currentYear}/`,
+          tracking_practice_group: `${baseURL}comp_track_prac_group_${currentYear}/`,
+          tracking_practice_equality_group: `${baseURL}comp_track_prac_group_${currentYear}/`
+        };
+
+        mapFrame.src = mapURLs[mapID] || mapURLs['efdi_all'];
+
+        breadcrumb.innerHTML = `<a href="#" onclick="resetBreadcrumb()">EfDI</a> > ${breadcrumbPath}`;
+
+        mapFrame.classList.remove("fade-out");
+        mapFrame.classList.add("fade-in");
+      }, 500);
+    }
+
+    function resetBreadcrumb() {
+      breadcrumbPath = "EfDI > Overall";
+      switchTab('efdi_all', 'Overall');
+    }
+
+    // Initialize the dropdowns with the default selection
+    updateCurriculumDropdown();
+    updatePedagogyDropdown();
+    updateEthosDropdown();
+    updateTrainingDropdown();
+    updateAutonomyDropdown();
+    updateCeDropdown();
+    updateTrackingDropdown();
+  </script>
+</body>
+</html>
