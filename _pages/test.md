@@ -4,4 +4,4 @@ title: test
 permalink: /test/
 ---
 
-<iframe src="https://adrianaarellano.github.io/efdi_maps_test_2/" height="900" width="1000" style="border:none;"></iframe>
+<iframe src="https://adrianaarellano.github.io/efdi_maps_test_2/" height="900" width="1200" style="border:none;"></iframe>
