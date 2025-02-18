@@ -1,12 +1,12 @@
 ---
 layout: page
-title: submenus
+title: Explore the data
 nav: true
 nav_order: 8
 dropdown: true
 children:
-  - title: test
-    permalink: /test/
+  - title: Maps
+    permalink: /maps/
   - title: divider
   - title: projects
     permalink: /projects/

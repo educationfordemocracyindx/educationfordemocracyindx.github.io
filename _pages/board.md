@@ -2,6 +2,8 @@
 layout: profiles
 title: The Advisory Board
 permalink: /board/
+description: The advisory board meets several times over the course of the project. It provides advice and feedback on all aspects of the project, from the design of the EfDI to the dissemination of the project’s results on the website and in publications. Its members are:
+
 
 profiles:
   # To include more than one profile, replicate this block and create one content file for each profile inside _pages/
@@ -10,7 +12,7 @@ profiles:
     content: about_martyn.md
     image_circular: false  # Set to true to crop the image into a circle
   - align: left
-    image: Maria_Magdalena_Isac.jpg
+    image: maria_magdalena_isac.jpg
     content: about_magda.md
     image_circular: false  # Set to true to crop the image into a circle
   - align: right
@@ -22,5 +24,3 @@ profiles:
     content: about_liz.md
     image_circular: false  # Set to true to crop the image into a circle
 ---
-
-The advisory board meets several times over the course of the project. It provides advice and feedback on all aspects of the project, from the design of the EfDI to the dissemination of the project’s results on the website and in publications. Its members are:
