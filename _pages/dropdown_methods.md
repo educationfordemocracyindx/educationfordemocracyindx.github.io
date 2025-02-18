@@ -11,4 +11,6 @@ children:
     permalink: /approach/
   - title: Data Sources
     permalink: /sources/
+  - title: Indicators
+    permalink: /indicators/
 ---
