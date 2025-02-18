@@ -16,6 +16,6 @@ The main EfDI index is at the highest level of abstraction, while individual ind
 4. An EfDI Policy and an EfDI Practice subindex for each of the seven areas  
 5. Individual indicators  
 
-[Additional text on synchronization of indicators and subindexes with EfDI]  
+Once you select an index, all other levels will synchronize and only show maps for that index. To view different levels of an index and its related maps select that index and it will synchronize accordingly.
 
 <iframe src="https://adrianaarellano.github.io/efdi_maps_test_2/" height="900" width="1100" style="border:none;"></iframe>
