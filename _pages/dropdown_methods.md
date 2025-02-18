@@ -9,4 +9,6 @@ children:
     permalink: /components/
   - title: Approach
     permalink: /approach/
+  - title: Data Sources
+    permalink: /sources/
 ---
