@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /funder/
-title: The funder
+title: The Funder
 ---
 
 The project is funded by a Research Project Grant from the Leverhulme Trust

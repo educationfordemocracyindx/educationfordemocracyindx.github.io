@@ -13,4 +13,8 @@ profiles:
     image: bryony_photo.jpg
     content: about_bryony.md
     image_circular: false  # Set to true to crop the image into a circle
+  - align: right
+    image: adrian_photo.jpg
+    content: about_adrian.md
+    image_circular: false  # Set to true to crop the image into a circle
 ---

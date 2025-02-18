@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /project/
-title: The project
+title: The Project
 ---
 
 The Education for Democracy Index (EfDI) is a tool that measures how well a country’s educational policies and practices promote democratic competences (i.e. knowledge, skills, values, attitudes and behaviours). It is a comprehensive multidimensional index in that it captures not only the areas of education that are specifically intended to foster such competences, such as citizenship education, but also institutional characteristics, such as the degree of school autonomy that may have unintended consequences on these outcomes. Apart from providing a quick scan of the democratic performance of a national education system it also allows for the identification of specific areas of improvement within it. As such it is a highly useful tool for policy makers and practitioners interested in how education in their country can more effectively enhance the democratic engagement of school-going youth.
