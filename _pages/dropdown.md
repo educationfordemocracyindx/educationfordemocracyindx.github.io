@@ -8,9 +8,6 @@ children:
   - title: Maps
     permalink: /maps/
   - title: divider
-  - title: projects
-    permalink: /projects/
-  - title: divider
-  - title: blog
-    permalink: /blog/
+  - title: Trendlines
+    permalink: /trendlines/
 ---
