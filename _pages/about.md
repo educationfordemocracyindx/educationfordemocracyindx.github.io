@@ -22,8 +22,8 @@ permalink: /
 </div>
 
 <div class="row mt-3">
-    <div class="col-md-6 text-center">
-        {% include figure.liquid loading="eager" path="assets/img/University_of_Roehampton_logo.jpg" class="img-fluid rounded z-depth-1 equal-height-img" %}
+    <div class="col-md-6 text-center">  
+        {% include figure.liquid loading="eager" path="assets/img/roehampton.jpg" class="img-fluid rounded z-depth-1 equal-height-img" %}
     </div>
     <div class="col-md-6 text-center">
         {% include figure.liquid loading="eager" path="assets/img/llakes-logo.jpg" class="img-fluid rounded z-depth-1 equal-height-img" %}
