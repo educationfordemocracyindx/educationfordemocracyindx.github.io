@@ -2,7 +2,7 @@
 layout: profiles
 permalink: /board/
 title: The Advisory Board
-description: members of the lab or group
+description: The advisory board meets a number of times over the course of the project. It offers advice and feedback on all aspects of the project, from the design of the EfDI to the dissemination of the project’s results on the website and in publications. Its members are:
 
 profiles:
   # To include more than one profile, replicate this block and create one content file for each profile inside _pages/
