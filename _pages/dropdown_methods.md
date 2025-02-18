@@ -7,6 +7,6 @@ dropdown: true
 children:
   - title: The EfDI and its Components
     permalink: /components/
-  -title: Approach
+  - title: Approach
     permalink: /approach/
 ---
