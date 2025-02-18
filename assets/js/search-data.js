@@ -128,6 +128,20 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "";
               },
+            },{id: "dropdown-normalization-and-aggregation",
+              title: "Normalization and Aggregation",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "";
+              },
+            },{id: "dropdown-data",
+              title: "Data",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "";
+              },
             },{id: "post-a-post-with-image-galleries",
       
         title: "a post with image galleries",
