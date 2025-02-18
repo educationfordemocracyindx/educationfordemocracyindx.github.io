@@ -10,7 +10,7 @@ profiles:
     content: about_martyn.md
     image_circular: false  # Set to true to crop the image into a circle
   - align: left
-    image: maria_magdalena_isac.jpg
+    image: magda.jpg
     content: about_magda.md
     image_circular: false  # Set to true to crop the image into a circle
   - align: right
