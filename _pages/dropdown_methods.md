@@ -13,4 +13,8 @@ children:
     permalink: /sources/
   - title: Indicators
     permalink: /indicators/
+  - title: Normalization and Aggregation
+    permalink: /normalization/
+  - title: Data
+    permalink: /data/
 ---
