@@ -14,7 +14,7 @@ profiles:
     content: about_bryony.md
     image_circular: false  # Set to true to crop the image into a circle
   - align: right
-    image: Adrian_Arellano_(1).jpg
+    image: Adrian_Arellano_copy.jpg
     content: about_adrian.md
     image_circular: false  # Set to true to crop the image into a circle
 ---
