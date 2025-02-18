@@ -7,7 +7,7 @@ dropdown: true
 children:
   - title: Project
     permalink: /project/
-- title: divider
-- title: Funder
+  - title: divider
+  - title: Funder
     permalink: /funder/
 ---
