@@ -1,0 +1,1 @@
+[Maria Magdalena (Magda) Isac](https://soc.kuleuven.be/centre-for-political-research/Personeel/00132941) is a Researcher at the Centre for Political Science Research of the KU Leuven, Belgium and the International Study Director of ICCS.
