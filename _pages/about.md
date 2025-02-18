@@ -7,8 +7,10 @@ permalink: /
 <style>
     .equal-height-img {
         height: 200px; /* Adjust height as needed */
-        object-fit: cover; /* Ensures images are cropped consistently */
-        width: 100%; /* Makes sure they fill the container */
+        object-fit: contain; /* Ensures logos are fully visible */
+        width: 100%; /* Makes sure they fill the container width */
+        background-color: white; /* Optional: Ensures a clean background */
+        padding: 10px; /* Optional: Adds space to prevent logos from touching edges */
     }
 </style>
 
