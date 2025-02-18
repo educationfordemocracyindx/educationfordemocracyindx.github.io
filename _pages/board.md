@@ -20,7 +20,7 @@ profiles:
     content: about_sarah.md
     image_circular: false  # Set to true to crop the image into a circle
   - align: left
-    image: liz_moorse.jpg
+    image: liz_moorse.jpeg
     content: about_liz.md
     image_circular: false  # Set to true to crop the image into a circle
 ---
