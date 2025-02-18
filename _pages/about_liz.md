@@ -1,1 +1,1 @@
-[Liz Moorse](https://www.teachingcitizenship.org.uk/) leads the Charity, working with our Board, Teacher Council and staff and overseeing key programmes including the Active Citizenship in Schools Programme and the Five Nations Network in the UK and Ireland.
+Liz Moorse leads the Charity, working with our Board, Teacher Council and staff and overseeing key programmes including the Active Citizenship in Schools Programme and the Five Nations Network in the UK and Ireland.
