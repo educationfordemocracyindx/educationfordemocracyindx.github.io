@@ -20,6 +20,7 @@ Examples of such competences include freedom of speech, respect for difference, 
 | **Unitary system of education** | The more centralised a system of education is / the less autonomy schools have, the greater the equality in democratic competence. |
 | **Unitary system of education** | The more comprehensive lower secondary education is / the less tracked it is, the greater the equality in democratic competences. |
 
+
 Consequently, we selected these seven areas as the building blocks of the overall EfDI and its subindexes. Guided by the effects of the areas reported in the literature, we assign higher scores to countries on a certain area if they show a policy or practice associated with higher levels of or greater equality in democratic competences. For instance, if a country has 13 years of compulsory education, it will receive a higher score on this area than a country with only 10 years of compulsory education.
 
 Four areas have dual effects in that they influence both levels of and equality in democratic competences. Two areas influence primarily the distribution of such competences, while one area influences only the level of competences. While the first four areas shown in the table can be said to refer to policies and practices intentionally targeting democratic competences, the last three areas represent more general institutional characteristics that may not have been designed to foster such competences but that have side effects on them.
