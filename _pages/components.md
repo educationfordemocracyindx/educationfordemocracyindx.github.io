@@ -12,13 +12,13 @@ Examples of such competences include freedom of speech, respect for difference, 
 
 | **Educational Area** | **Effect on Democratic Competences** |
 | :------------------- | :----------------------------------- |
-| **Citizenship education (CE) curriculum** | The more clearly CE has been defined in the national curriculum, the more topics CE covers, and the more time is devoted to CE in the school curriculum, the higher the level of and the greater the equality in democratic competences. |
-| **Participatory pedagogy** | The more the teaching in schools allows students to practice democracy by allowing them to discuss social issues freely and by giving them a voice in their learning, the higher the level of and the greater the equality in democratic competences. |
-| **CE in teacher training** | The more comprehensively CE is addressed in teacher training, the higher the level of and the greater the equality in democratic competences. |
-| **School ethos** | The more the school ethos addresses democratic values and practices, the higher the level of democratic competences. |
-| **Length of compulsory education** | The longer the period of compulsory education, the higher the level of and the greater the equality in democratic competences. |
-| **Unitary system of education** | The more centralised a system of education is / the less autonomy schools have, the greater the equality in democratic competence. |
-| **Unitary system of education** | The more comprehensive lower secondary education is / the less tracked it is, the greater the equality in democratic competences. |
+| **Citizenship education (CE) curriculum** | The more clearly CE has been defined in the national curriculum, the more topics CE covers, and the more time is devoted to CE in the school curriculum, the higher the *level of* and the greater the *equality in* democratic competences. |
+| **Participatory pedagogy** | The more the teaching in schools allows students to practice democracy by allowing them to discuss social issues freely and by giving them a voice in their learning, the higher the *level of* and the greater the *equality in* democratic competences. |
+| **CE in teacher training** | The more comprehensively CE is addressed in teacher training, the higher the *level of* and the greater the *equality in* democratic competences. |
+| **School ethos** | The more the school ethos addresses democratic values and practices, the higher the *level of* democratic competences. |
+| **Length of compulsory education** | The longer the period of compulsory education, the higher the *level of* and the greater the *equality in* democratic competences. |
+| **Unitary system of education** | The more centralised a system of education is / the less autonomy schools have, the greater the *equality in* democratic competence. |
+| **Unitary system of education** | The more comprehensive lower secondary education is / the less tracked it is, the greater the *equality in* democratic competences. |
 
 
 Consequently, we selected these seven areas as the building blocks of the overall EfDI and its subindexes. Guided by the effects of the areas reported in the literature, we assign higher scores to countries on a certain area if they show a policy or practice associated with higher levels of or greater equality in democratic competences. For instance, if a country has 13 years of compulsory education, it will receive a higher score on this area than a country with only 10 years of compulsory education.
