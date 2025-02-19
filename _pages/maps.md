@@ -6,7 +6,7 @@ permalink: /maps/
 
 This option allows you to quickly assess how countries are scoring relative to one another on the main EfDI index, its subindexes, and individual indicators. You can create maps for three points in time and at different levels of granularity.
 
-The main EfDI index is at the highest level of abstraction, while individual indicators provide the most detailed insight into specific policies and practices. Please note that the individual indicator scores are the original, unstandardized values to facilitate interpretation, whereas all subindex and main index scores are based on standardized indicator scores. (See [methodology link] for details on the standardization procedure.) We have ensured that standardization allows for comparison of main index and subindex scores over time.
+The main EfDI index is at the highest level of abstraction, while individual indicators provide the most detailed insight into specific policies and practices. Please note that the individual indicator scores are the original, unstandardized values to facilitate interpretation, whereas all subindex and main index scores are based on standardized indicator scores. (See [methodology](https://educationfordemocracyindx.github.io/components/) for details on the standardization procedure.) We have ensured that standardization allows for comparison of main index and subindex scores over time.
 
 #### Maps can be created for the following levels, in ascending order of granularity:
 
