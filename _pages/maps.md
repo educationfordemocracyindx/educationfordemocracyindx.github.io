@@ -18,4 +18,4 @@ The main EfDI index is at the highest level of abstraction, while individual ind
 
 Once you select an index, all other levels will synchronize and only show maps for that index. To view different levels of an index and its related maps select that index and it will synchronize accordingly.
 
-<iframe src="https://adrianaarellano.github.io/efdi_maps_test_2/" height="900" width="1100" style="border:none;"></iframe>
+<iframe src="https://adrianaarellano.github.io/efdi_map_all_index_22_16_09/" height="900" width="1100" style="border:none;"></iframe>
