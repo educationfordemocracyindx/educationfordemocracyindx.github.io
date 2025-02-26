@@ -37,6 +37,20 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "";
               },
+            },{id: "dropdown-maps",
+              title: "Maps",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "";
+              },
+            },{id: "dropdown-trendlines",
+              title: "Trendlines",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "";
+              },
             },{id: "dropdown-the-efdi-and-its-components",
               title: "The EfDI and its Components",
               description: "",
@@ -74,20 +88,6 @@ ninja.data = [{
               },
             },{id: "dropdown-data",
               title: "Data",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "";
-              },
-            },{id: "dropdown-maps",
-              title: "Maps",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "";
-              },
-            },{id: "dropdown-trendlines",
-              title: "Trendlines",
               description: "",
               section: "Dropdown",
               handler: () => {
