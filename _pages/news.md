@@ -2,7 +2,7 @@
 layout: page
 title: News
 permalink: /news/
-nav_order: 11
+nav_order: 4
 dropdown: true
 ---
 

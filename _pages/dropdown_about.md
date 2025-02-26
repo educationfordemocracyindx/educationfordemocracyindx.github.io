@@ -2,7 +2,7 @@
 layout: page
 title: About
 nav: true
-nav_order: 9
+nav_order: 1
 dropdown: true
 children:
   - title: Project

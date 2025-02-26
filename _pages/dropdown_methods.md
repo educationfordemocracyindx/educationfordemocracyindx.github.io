@@ -2,7 +2,7 @@
 layout: page
 title: Methodology
 nav: true
-nav_order: 10
+nav_order: 2
 dropdown: true
 children:
   - title: The EfDI and its Components
