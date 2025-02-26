@@ -8,8 +8,8 @@ This option allows you to track the performance of a country over time on a spec
 
 #### Main Index or Subindex:
 
-<iframe src="https://adrianaarellano.github.io/trendlines_index_v2/" height="900" width="1000" style="border:none;"></iframe>
+<iframe src="https://adrianaarellano.github.io/trendlines_index_v2/" height="950" width="1000" style="border:none;"></iframe>
 
 #### Indicator:
 
-<iframe src="https://adrianaarellano.github.io/subindicator_graphs_v2/" height="900" width="1000" style="border:none;"></iframe>
+<iframe src="https://adrianaarellano.github.io/subindicator_graphs_v2/" height="900" width="900" style="border:none;"></iframe>
