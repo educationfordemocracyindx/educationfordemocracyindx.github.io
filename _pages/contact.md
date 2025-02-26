@@ -1,8 +1,8 @@
 ---
 layout: page
-title: News
-permalink: /news/
-nav_order: 11
+title: Contact
+permalink: /contact/
+nav_order: 12
 dropdown: true
 ---
 
