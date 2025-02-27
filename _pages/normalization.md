@@ -4,7 +4,7 @@ permalink: /normalization/
 title: Normalization and Aggregation
 ---
 
-Normalization and aggregation, the essential steps for estimating any index, are outlined below alongside a detailed example. Our approach is grounded in a strong foundation provided by the policy and academic literature on composite indices.
+Normalization and aggregation, the essential steps for estimating any index, are outlined below. For a detailed example see our methodology document. Our approach is grounded in a strong foundation provided by the policy and academic literature on composite indices.
 
 #### Normalization
 
@@ -15,8 +15,7 @@ Rescaling is influenced by the selection of bounds and the presence of extreme v
 We used survey results to avoid allowing outliers to have undue influence on the values of the subindices and the aggregate index. Results from the ICCS school principal, teacher, and student surveys are rescaled with the theoretical minimum equal to 0 and a theoretical maximum equal to 100. We then take the average across all school, teacher, or student responses for a given question within each country.
 Values for variables are scaled from 0 to 100 with the aid of a conventional linear scaling transformation. This requires target value or points of reference relative to which indicators can be scaled. In general, measuring the distance to a reference point helps determine the relative position of a given indicator. For our analysis, the reference point is the country leader—the highest-scoring country for a given indicator across all three time periods.
 
-We apply the ratio-to-best normalization method, where a country's score is divided by the highest score recorded across all three years. The resulting ratio is then multiplied by 100, ensuring a final scale from 0 to 100. This approach has the advantage of mitigating the influence of extreme values or outliers that could distort the transformed indicator while also making the results easier to interpret (OECD, 2008).
-Unless otherwise indicated in the worked-through example of Sweden below, indicators are normalized as:
+We apply the ratio-to-best normalization method, where a country's score is divided by the highest score recorded across all three years. The resulting ratio is then multiplied by 100, ensuring a final scale from 0 to 100. This approach has the advantage of mitigating the influence of extreme values or outliers that could distort the transformed indicator while also making the results easier to interpret (OECD, 2008). Indicators are normalized as:
 
 Normalized indicator score = (Mean response / Group leader value) * 100
 
